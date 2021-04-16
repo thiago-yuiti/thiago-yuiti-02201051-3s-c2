@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -65,11 +66,14 @@ public class LutadorController {
             return ResponseEntity.status(400).body("Ambos os lutadores devem estar vivos!");
         }
         lutadorApanha.setVida(lutadorApanha.getVida()-lutadorBate.getForcaGolpe());
+        repository.save(lutadorApanha);
         if (lutadorApanha.getVida()<=0){
             lutadorApanha.setVida(0.0);
         }
-
-        return ResponseEntity.status(200).build();
+         List<Lutador> lutadores = new ArrayList<Lutador>();
+            lutadores.add(lutadorBate);
+            lutadores.add(lutadorApanha);
+        return ResponseEntity.status(200).body(lutadores);
     }
 
     @GetMapping("/mortos")
