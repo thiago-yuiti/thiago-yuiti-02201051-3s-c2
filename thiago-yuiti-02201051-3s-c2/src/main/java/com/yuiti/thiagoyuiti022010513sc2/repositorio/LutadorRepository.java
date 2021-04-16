@@ -10,5 +10,6 @@ public interface LutadorRepository extends JpaRepository<Lutador,Integer> {
 
     List<Lutador> findAllByOrderByForcaGolpe();
     Long countAllByVidaGreaterThan(Double vida);
-    List<Lutador> findById(Integer id);
+    List<Lutador> findAllByVidaEquals(Double vida);
+    List<Lutador> findByIdEquals(Integer id);
 }

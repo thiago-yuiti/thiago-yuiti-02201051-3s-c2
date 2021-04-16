@@ -36,7 +36,7 @@ public class LutadorController {
     }
     @PostMapping("/{id}/concentrar")
     public ResponseEntity postConcentrar(@RequestParam Integer id){
-        List<Lutador> lutador = repository.findById(id);
+        List<Lutador> lutador = repository.findByIdEquals(id);
         if(lutador.isEmpty()){
             return ResponseEntity.status(204).build();
         }else {
@@ -49,5 +49,17 @@ public class LutadorController {
                 return ResponseEntity.status(400).body("Lutador já se concentrou 3 vezes!");
             }
         }
+    }
+
+    @GetMapping("/mortos")
+    public ResponseEntity getMortos(){
+        List<Lutador> lutadoresMortos = repository.findAllByVidaEquals(0.0);
+
+        if(lutadoresMortos.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }else {
+            return ResponseEntity.status(200).body(lutadoresMortos);
+        }
+
     }
 }
