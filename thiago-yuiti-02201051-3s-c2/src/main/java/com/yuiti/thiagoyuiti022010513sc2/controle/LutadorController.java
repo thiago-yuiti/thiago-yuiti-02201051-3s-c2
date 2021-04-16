@@ -35,21 +35,25 @@ public class LutadorController {
         return ResponseEntity.status(200).body("Números de vivos = " + vivos);
     }
     @PostMapping("/{id}/concentrar")
-    public ResponseEntity postConcentrar(@RequestParam Integer id){
-        List<Lutador> lutador = repository.findByIdEquals(id);
-        if(lutador.isEmpty()){
+    public ResponseEntity postConcentrar(@PathVariable Integer id){
+
+
+        if(!repository.existsById(id)){
             return ResponseEntity.status(204).build();
         }else {
-            if(lutador.get(0).getConcentracoesRealizadas()>3) {
-                lutador.get(0).setConcentracoesRealizadas(lutador.get(0).getConcentracoesRealizadas()+1);
-                lutador.get(0).setVida(lutador.get(0).getVida()*1.15);
-                repository.save(lutador.get(0));
+            Lutador lutador = repository.findById(id).get();
+            if(lutador.getConcentracoesRealizadas()<3) {
+                lutador.setConcentracoesRealizadas(lutador.getConcentracoesRealizadas()+1);
+                lutador.setVida(lutador.getVida()*1.15);
+                repository.save(lutador);
                 return ResponseEntity.status(200).build();
             }else{
                 return ResponseEntity.status(400).body("Lutador já se concentrou 3 vezes!");
             }
         }
     }
+    @PostMapping("/golpe")
+    public ResponseEntity
 
     @GetMapping("/mortos")
     public ResponseEntity getMortos(){
