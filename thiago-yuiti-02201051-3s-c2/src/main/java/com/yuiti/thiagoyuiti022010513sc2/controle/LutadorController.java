@@ -1,5 +1,6 @@
 package com.yuiti.thiagoyuiti022010513sc2.controle;
 
+import com.yuiti.thiagoyuiti022010513sc2.dominio.Golpe;
 import com.yuiti.thiagoyuiti022010513sc2.dominio.Lutador;
 import com.yuiti.thiagoyuiti022010513sc2.repositorio.LutadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,23 @@ public class LutadorController {
         }
     }
     @PostMapping("/golpe")
-    public ResponseEntity
+    public ResponseEntity postGolpe(@RequestBody @Valid Golpe golpe){
+        if(!repository.existsById(golpe.getIdLutadorApanha()) ||!repository.existsById(golpe.getIdLutadorBate())){
+            return ResponseEntity.status(204).build();
+        }
+
+        Lutador lutadorBate = repository.findById(golpe.getIdLutadorBate()).get();
+        Lutador lutadorApanha = repository.findById(golpe.getIdLutadorApanha()).get();
+        if(!lutadorBate.isVivo() || !lutadorApanha.isVivo()){
+            return ResponseEntity.status(400).body("Ambos os lutadores devem estar vivos!");
+        }
+        lutadorApanha.setVida(lutadorApanha.getVida()-lutadorBate.getForcaGolpe());
+        if (lutadorApanha.getVida()<=0){
+            lutadorApanha.setVida(0.0);
+        }
+
+        return ResponseEntity.status(200).build();
+    }
 
     @GetMapping("/mortos")
     public ResponseEntity getMortos(){
